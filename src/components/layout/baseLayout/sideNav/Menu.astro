@@ -1,35 +1,44 @@
 ---
-import MenuApplicative from "@components/layout/baseLayout/sideNav/MenuApplicative.astro";
 import { Icon } from "astro-icon/components";
+import MenuApplicative from "./MenuApplicative.astro";
 
 const { pathname } = Astro.url;
 const { menu } = Astro.props;
+const endpoint = `${import.meta.env.API_URL}process-types`;
+
+const getProcess = await fetch(endpoint)
+  .then((response) => response.json())
+  .then((data) => data)
+  .catch((error) => console.log(error));
+
+console.log(getProcess);
 ---
 
 <nav class="flex flex-1 flex-col" x-data={`{activeMenuItem: ''}`}>
-    <ul class="flex flex-1 flex-col gap-y-1">
-        {
-            pathname != "/home" ? (
-                <li>
-                    <a
-                        href="/home"
-                        class="flex items-center p-2 rounded-md text-sm font-semibold leading-6 text-amber-50 hover:bg-emerald-950 group"
-                    >
-                        <Icon name="home" />
-                        <span class="ms-3">Inicio</span>
-                    </a>
-                </li>
-            ) : (
-                ""
-            )
-        }
-        {
-            menu.map((applicative) => (
-                <MenuApplicative
-                    name={applicative.name}
-                    options={applicative.options}
-                />
-            ))
-        }
-    </ul>
+  <ul class="flex flex-1 flex-col gap-y-1">
+    {
+      getProcess.map((applicative) => (
+        <MenuApplicative name={applicative.name} />
+      ))
+    }
+      <li>
+        <a
+          href="/inbox"
+          class="flex items-center p-2 rounded-md text-sm font-semibold leading-6 text-amber-50 hover:bg-emerald-950 group"
+        >
+          <Icon name="inbox/inbox"/>
+          <span class="ms-3">Bandeja de entrada</span>
+        </a>
+      </li>
+  </ul>
+  <ul>
+    {
+      menu.map((applicative) => (
+        <MenuApplicative
+          name={applicative.name}
+          options={applicative.options}
+        />
+      ))
+    }
+  </ul>
 </nav>

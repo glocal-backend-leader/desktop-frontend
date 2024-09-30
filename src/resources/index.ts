@@ -135,10 +135,6 @@ export const handleFind = async (endpoint) => {
     try {
         return await axios.get(endpoint)
             .then((response) => {
-                /* console.log("Todo en orden para Read");
-                console.log(response.data);
-                console.log(response.status);
-                console.log(response.statusText); */
                 return response;
             })
             .catch((error) => {

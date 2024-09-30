@@ -1,0 +1,57 @@
+---
+import { ViewTransitions } from "astro:transitions";
+
+import Alert from "@components/shared/Alert.astro";
+import AppBar from "@components/layout/baseLayout/AppBar.astro";
+import Breadcrumb from "@components/layout/baseLayout/Breadcrumb.astro";
+import Desktop from "@components/layout/baseLayout/sideNav/Desktop.astro";
+import Favicon from "@components/shared/Favicon.astro";
+import MetaTags from "@components/shared/MetaTags.astro";
+import Mobile from "@components/layout/baseLayout/sideNav/Mobile.astro";
+import Spinner from "@components/shared/Spinner.astro";
+
+import "@styles/global.css";
+import DesktopPrueba from "@components/layout/baseLayout/sideNav/DesktopPrueba.astro";
+import Icon from "node_modules/astro-icon/components/Icon.astro";
+import AppbarPrueba from "@components/layout/baseLayout/sideNav/AppbarPrueba.astro";
+
+const { permissions, title = "UManizales" } = Astro.props;
+---
+
+<!doctype html>
+<html class="bg-white h-full" lang="es">
+    <head>
+        <MetaTags />
+        <title>{`${title} | ${import.meta.env.APP_NAME}`}</title>
+        <Favicon />
+        <ViewTransitions />
+    </head>
+    <body class="h-full">
+        <div>
+            <Mobile />
+            <DesktopPrueba />
+            <div class="lg:pl-72">
+                <AppbarPrueba title={title} />
+                <main class="py-10">
+                    <div class="px-4 sm:px-6 lg:px-8">
+                        <div class="flex items-center justify-end">
+                            <a href="/login">
+                            <button
+                                class="inline-flex items-center gap-x-1.5 rounded-md bg-emerald-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                                type="button">
+                                Iniciar sesión
+                                <Icon
+                                    class="-mr-0.5 h-5 w-5"
+                                    name="shared/login"/>
+                            </button>
+                        </a>
+                        </div>
+                        <slot/>
+                    </div>
+                </main>
+            </div>
+        </div>
+        <Spinner />
+        <Alert />
+    </body>
+</html>

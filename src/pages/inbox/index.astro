@@ -1,6 +1,64 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 
+
+
+
 ---
 <BaseLayout title="Bandeja de entrada">
+    <div class="container ">
+        <div class="title text-3xl">
+            <h3 >Procesos</h3>
+        </div>
+        <div class="relative overflow-x-auto pt-5">
+            <table class="w-full text-sm text-center rtl:text-center  bg-white">
+                <thead class="text-s text-gray-800 bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 border-b border-gray-300">
+                            Nombre
+                        </th>
+                        <th scope="col" class="px-6 py-3 border-b border-gray-300">
+                            Tipo de proceso
+                        </th>
+                        <th scope="col" class="px-6 py-3 border-b border-gray-300">
+                            Proceso
+                        </th>
+                        <th scope="col" class="px-6 py-3 border-b border-gray-300">
+                            Estado
+                        </th>
+                        <th scope="col" class="px-6 py-3 border-b border-gray-300">
+                            Fase
+                        </th>
+                        <th scope="col" class="px-6 py-3 border-b border-gray-300">
+                            Gestionar
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-white border-b">
+                        <td scope="row" class=" px-2 py-4">
+                            Carlos Alberto Javier Yepez 
+                        </td>
+                        <td class="px-2 py-4">
+                            Convocatoria
+                        </td>
+                        <td class="px-2 py-4">
+                            Convocatoria Entrante
+                        </td>
+                        <td class="px-2 py-4">
+                            En curso
+                        </td>
+                        <td class="px-2 py-4">
+                            Información estudiante (fase 3)
+                        </td>
+                        <td class="px-2 py-4">
+                            <button class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded">
+                                Ingresar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </BaseLayout>

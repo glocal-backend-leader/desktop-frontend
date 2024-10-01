@@ -1,35 +1,80 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { Icon } from "astro-icon/components";
 
+const estudiantes = await fetch(`http://172.28.20.251:3000/api/v1/processes/task-list`)
+    .then(response => response.json())
+    .catch(error => {
+        console.error('Error fetching estudiantes:', error);
+        return [];
+    });
 ---
 <BaseLayout title="Bandeja de entrada">
-    <div class="container ">
+    <div class="container p-5">
         <div class="title text-3xl mb-5">
             <h3>Procesos</h3>
         </div>
-        
-        <div class="flex justify-center">
-            <div class=" w-full max-w-sm p-10 rounded overflow-hidden shadow-lg m-5">
-                <h4 class="text-lg font-semibold text-gray-800">Carlos Alberto Javier Yepez</h4>
-                <p class="text-gray-600">Tipo de proceso: Convocatoria</p>
-                <p class="text-gray-600">Proceso: Convocatoria Entrante</p>
-                <p class="text-gray-600">Estado: En curso</p>
-                <p class="text-gray-600">Fase: Información estudiante (fase 3)</p>
-                <button class="mt-4 bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded align-self:center">
-                    Ingresar
-                </button>
-            </div>
-            <div class=" w-full max-w-sm p-10 rounded overflow-hidden shadow-lg m-5">
-                <h4 class="text-lg font-semibold text-gray-800">Carlos Alberto Javier Yepez</h4>
-                <p class="text-gray-600">Tipo de proceso: Convocatoria</p>
-                <p class="text-gray-600">Proceso: Convocatoria Entrante</p>
-                <p class="text-gray-600">Estado: En curso</p>
-                <p class="text-gray-600">Fase: Información estudiante (fase 3)</p>
-                <button class="mt-4 bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded align-self:center">
-                    Ingresar
-                </button>
-            </div>
-        </div>
-        
+
+        <ul class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl space-y-4"> 
+            {estudiantes.length > 0 ? estudiantes.map(({id,user_name,process_type,process,state,phase}) => (
+                <li class="relative flex justify-between gap-x-6 px-2 py-5 hover:bg-gray-50 sm:px-6 grid-rows-4">
+                  <div class="flex flex-col min-w-0 gap-y-5">
+                    <div class="min-w-0 flex-auto">
+                      <h4 class="text-lg font-semibold text-gray-900">{user_name}</h4>
+                      <p class="text-gray-600">Tipo de proceso: {process_type}</p>
+                      <p class="text-gray-600">Proceso: {process}</p>
+                      <p class="text-gray-600">Estado: {state}</p>
+                      <p class="text-gray-600">Fase: {phase}</p>
+                    </div>
+                  </div>
+
+                  <div class="flex justify-center items-center space-x-10">
+                    <button
+                        class="mt-4 bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded align-self:center"
+                    >
+                        Ingresar
+                    </button>
+                  </div>
+
+                  <div class="flex flex-none items-center gap-x-4" x-data="{isListOptionsMenuOpen: false}">
+                    <div class="relative flex-none">
+                      <button
+                        class="-m-5.5 block p-2.5 text-gray-500 hover:text-gray-900"
+                        type="button"
+                        @click="isListOptionsMenuOpen = !isListOptionsMenuOpen"
+                      >
+                        <Icon class="h-10 w-10" name="shared/ellipsis-vertical" />
+                      </button>
+                      <div
+                        class="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none"
+                        tabindex="-1"
+                        x-show="isListOptionsMenuOpen"
+                        @click.outside="isListOptionsMenuOpen = false"
+                      >
+                        <a
+                          href="#"
+                          class="block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-gray-50"
+                          tabindex="-1"
+                          @click.prevent={`isUpdateWindowOpen = true; selectedProcess = '${id}';`}
+                        >
+                          Editar
+                        </a>
+                        <a
+                          href="#"
+                          class="block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-gray-50"
+                          tabindex="-1"
+                          @click.prevent={`isDeleteWindowOpen = true; selectedProcess = '${id}'; console.log('Proceso ID para eliminar:', '${id}')`}
+                        >
+                          Eliminar
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+            )) : (
+                <li class="text-gray-600 p-4">No hay procesos disponibles.</li>
+            )}
+        </ul>
     </div>
 </BaseLayout>
+

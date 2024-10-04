@@ -34,16 +34,19 @@ await axios
                     }) => (
                         <li class="flex justify-between items-center gap-x-6 px-1 py-2 hover:bg-gray-50 sm:px-6 ">
                             <div class="w-3/4 flex flex-col min-w-0 gap-y-5">
-                                <div class="min-w-0 grid grid-cols-5 justify-center items-center flex-auto text-sm">
-                                    <h4 class="font-semibold text-gray-900">
+                                <div class="flex justify-between items-center flex-auto text-sm">
+                                    <div class="titles">
+                                        <p class="text-gray-800 text-lg">
+                                        {process}
+                                    </p>
+                                    <p class="font-semibold text-gray-900">
                                         {user_name} 
-                                    </h4>
+                                    </p>
+                                    </div>
                                     <p class="text-gray-600">
                                          {process_type}
                                     </p>
-                                    <p class="text-gray-600">
-                                        {process}
-                                    </p>
+                                    
                                     <p class="text-gray-600"> {state}</p>
                                     <p class="text-gray-600">{phase}</p>
                                 </div>

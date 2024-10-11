@@ -12,7 +12,7 @@ const { endpoint } = Astro.props;
             <form
                 action={endpoint}
                 class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl"
-                id="formCreate"
+                id="form"
                 method="POST"
             >
                 <div>
@@ -43,3 +43,48 @@ const { endpoint } = Astro.props;
         </div>
     </div>
 </div>
+<script>
+import axios from "axios";
+
+    document.addEventListener("astro:page-load", () => {
+        const endpoint = `${import.meta.env.PUBLIC_API_URL}tenant`;
+        const form = document.getElementById("form");
+        if (form) {
+            document.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                let params = [];
+                const image = document.getElementById("image");
+                const file = image.files[0].name;
+                console.log(file)
+                const formData = new FormData(e.target as HTMLFormElement);
+                formData.append('image',file)
+            try {
+                const input = Object.fromEntries(formData.entries());
+                for(const key in input){
+                    const value = input[key];
+                    if(value){
+                        params.push(`${value}`)
+                    }
+                }
+                await axios({
+                        method: "post",
+                        url: `${endpoint}`,
+                        data: {
+                            name: `${params[0]}`,
+                            description: `${params[1]}`,
+                            status: 'true',
+                            image: `${file}`,
+                            colors: {
+                                primary: `${params[3]}`,
+                                secondary: `${params[4]}`
+                            }
+                        },
+                    })
+            } catch (error) {
+                console.log(error);
+                
+            }   
+            });
+        }
+    });
+</script>

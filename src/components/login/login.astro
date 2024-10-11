@@ -1,0 +1,142 @@
+---
+import Input from "@components/shared/forms/Input.astro";
+import axios from "axios";
+let tenants = [];
+await axios
+    .get(`${import.meta.env.PUBLIC_API_URL}tenant`)
+    .then((response) => (tenants = response.data))
+    .catch((error) => console.log(console.log(error)));
+---
+
+<div
+    class="bg-gray justify-center items-center rounded-lg shadow-lg p-12 w-full max-w-sm"
+>
+    <div
+        x-data=`{tenants: ${JSON.stringify(tenants)}, imgTenant: '', primaryColor: '', secondaryColor: '', accessToken: ''}`
+    >
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+            <img :src="imgTenant" class="max-w-20 h-auto mx-auto" />
+            <h2
+                class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
+            >
+                Ingresa con tu cuenta
+            </h2>
+        </div>
+        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+            <form class="space-y-6" action="#" id="form" method="POST">
+                <div>
+                    <div class="col-span-2">
+                        <label
+                            class="block text-sm font-medium leading-6 text-gray-900"
+                            >Universidad</label
+                        >
+                        <div class="mt-2">
+                            <select
+                                required
+                                name="tenant"
+                                id="tenant"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-950 sm:text-sm sm:leading-6"
+                                x-on:change=`
+                                    valueTenant=tenant.value
+                                   getTenantById = await fetch("http://172.28.20.251:3000/api/v1/tenant/"+valueTenant)
+                                    .then((response) => response.json())
+                                    .then((data) => data)
+                                    .catch((error) => console.log(error))
+                                    imgTenant=getTenantById.image
+                                    primaryColor=getTenantById.colors.primary
+                                    secondaryColor=getTenantById.colors.secondary
+                                    `
+                            >
+                                <option selected disabled
+                                    >Seleccione una opcion</option
+                                >
+                                <template x-for="tenant in tenants">
+                                    <option
+                                        :value="tenant.id"
+                                        x-text="tenant.name"></option>
+                                </template>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <Input
+                    attributes={{
+                        id: "email",
+                        label: "Correo",
+                        name: "email",
+                        type: "text",
+                        required: "",
+                    }}
+                />
+                <Input
+                    attributes={{
+                        id: "password",
+                        label: "Contraseña",
+                        name: "password",
+                        type: "password",
+                        required: "",
+                    }}
+                />
+                <button
+                    type="submit"
+                    @click="{primaryColor: primaryColor, secondaryColor: secondaryColor, imgTenant: imgTenant, accessToken: acessToken}"
+                    :style="{backgroundColor: primaryColor}"
+                    class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    >Entrar
+                </button>
+                <span x-text="accessToken"></span>
+            </form>
+            <div id="alert" style="display: none;" class="my-5 border-l-4 border-yellow-400 bg-yellow-50 p-4">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                      <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                  <div class="ml-3">
+                    <span>Los datos son incorrectos</span>
+                  </div>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+<script>
+    import axios from "axios";
+    document.addEventListener("astro:page-load", () => {
+        const endpoint = `${import.meta.env.PUBLIC_API_URL}auth/signIn`
+        let form = document.getElementById("form");
+        if (form) {
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const accessToken = document.querySelector('[x-text="accessToken"]');
+                let params = [];
+                let formData = new FormData(e.target as HTMLFormElement);
+                try {
+                    const input = Object.fromEntries(formData.entries());
+                    for (const key in input) {
+                        const value = input[key];
+                        if (value) {
+                            params.push(`${value}`);
+                        }
+                    }
+                    const hola = await axios({
+                        method: "post",
+                        url: `${endpoint}`,
+                        data: {
+                            tenant_id: params[0],
+                            email: params[1],
+                            password: params[2],
+                        },
+                    });
+                    accessToken.setAttribute('x-text', `'${hola.data.access_token}'`);
+                    document.getElementById("alert").style.display="none";
+                    location.href='/home'
+                } catch (error) {
+                    document.getElementById("alert").style.display="block";
+                }
+            });
+        }
+    });
+    console.log("");
+</script>

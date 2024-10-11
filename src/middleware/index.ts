@@ -1,12 +1,12 @@
 import { PUBLIC_ROUTES } from "@constants/shared";
 
 export const onRequest = (context, next) => {
-    console.log('---------------');
-    console.log('---------------');
-    console.log('---------------');
-    console.log('---------------');
-    console.log('---------------');
-    console.log(context.request);
+    // console.log('---------------');
+    // console.log('---------------');
+    // console.log('---------------');
+    // console.log('---------------');
+    // console.log('---------------');
+    // console.log(context.request);
     /* console.log(context);
     console.log(context.url.pathname); */
     /* if (context.cookies.has("test")) {

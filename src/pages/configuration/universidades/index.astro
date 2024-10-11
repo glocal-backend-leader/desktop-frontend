@@ -1,0 +1,51 @@
+---
+import CreateForm from "@components/configuration/tenant/CreateForm.astro";
+import List from "@components/configuration/tenant/List.astro";
+import UpdateForm from "@components/configuration/tenant/UpdateForm.astro";
+import DeleteWindow from "@components/layout/baseLayout/DeleteWindow.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import CreateWindowLayout from "@layouts/shared/CreateWindowLayout.astro";
+import UpdateWindowLayout from "@layouts/shared/UpdateWindowLayout.astro";
+import { validatePermission } from "@utils/permissions";
+const endpoint = `${import.meta.env.PUBLIC_API_URL}tenant`
+const permissions = {
+    create: validatePermission(""),
+    delete: validatePermission(""),
+    read: validatePermission(""),
+    update: validatePermission(""),
+};
+---
+<BaseLayout permissions={permissions} title="Universidades">
+    <div
+        x-data="{isDeleteWindowOpen: false, isInfoDrawerOpen: false, isUpdateWindowOpen: false}"
+    >
+        {
+            permissions.read ? (
+                <div x-data="{id: '', name: '', description: '', image: '', primaryColor: '', secondaryColor: ''}">
+                    <List endpoint={endpoint}/>
+                    {permissions.create  ? (
+                        <CreateWindowLayout>
+                            <CreateForm endpoint={endpoint}/>
+                        </CreateWindowLayout>
+                    ) : (
+                        ""
+                    )}
+                    {permissions.delete ? (
+                        <DeleteWindow endpoint={endpoint}/>
+                    ) : (
+                        ""
+                    )}
+                    {permissions.update ? (
+                        <UpdateWindowLayout>
+                            <UpdateForm endpoint={endpoint}/>
+                        </UpdateWindowLayout>
+                    ) : (
+                        ""
+                    )}
+                </div>
+            ) : (
+                ""
+            )
+        }
+    </div>
+</BaseLayout>

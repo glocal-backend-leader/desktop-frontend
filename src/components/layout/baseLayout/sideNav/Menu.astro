@@ -6,16 +6,37 @@ const { menu } = Astro.props;
 ---
 
 <nav class="flex flex-1 flex-col" x-data={`{activeMenuItem: ''}`}>
-  
   <ul class="flex flex-1 flex-col gap-y-1">
-    <li>
+    <li x-data="{ currentRoute: window.location.pathname }">
+      <a
+        href="/user"
+        class="flex items-center p-2 rounded-md text-sm font-semibold leading-6 group transition relative"
+        :class="{'bg-white text-emerald-600 border-r-4 border-emerald-600': currentRoute === '/user','text-amber-50 hover:bg-emerald-950': currentRoute !== '/user'}"
+      >
+        <Icon name="user/user" />
+        <span class="ms-3">Perfil</span>
+
+        <div
+          x-show="currentRoute === '/user'"
+          class="absolute z-50 right-1 top-0 bottom-0 w-20 bg-white transform translate-x-full overflow-visible"
+        >
+        </div>
+      </a>
       <a
         href="/inbox"
-        class="flex items-center p-2 rounded-md text-sm font-semibold leading-6 text-amber-50 hover:bg-emerald-950 group"
+        :class="{'bg-white text-emerald-600 border-r-4 border-emerald-600': currentRoute === '/inbox','text-amber-50 hover:bg-emerald-950': currentRoute !== '/inbox'}"
+        class="flex items-center p-2 rounded-md text-sm font-semibold leading-6 group transition relative"
       >
-        <Icon name="inbox/inbox"/>
+        <Icon name="inbox/inbox" />
         <span class="ms-3">Bandeja de entrada</span>
+        <div
+          x-show="currentRoute === '/inbox'"
+          class="absolute z-50 right-1 top-0 bottom-0 w-20 bg-white transform translate-x-full overflow-visible"
+        >
+        </div>
       </a>
+
+      
     </li>
     {
       menu.map((applicative) => (

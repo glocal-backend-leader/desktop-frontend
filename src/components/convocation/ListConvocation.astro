@@ -6,10 +6,10 @@ import { handleFind } from "@resources/index";
 const { endpoint, permissions } = Astro.props;
 
 // import axios from "axios";
-// let getPublicConvocation = [];
+// let calls = [];
 // await axios.get(`${import.meta.env.API_URL}processes`)
 //   .then(function (response) {
-//     getPublicConvocation = response.data;
+//     calls = response.data;
 //   })
 //   .catch(function (error) {
 //     console.log(error);
@@ -42,7 +42,7 @@ const getPublicConvocation = [
 
 <div
   class="bg-white shadow-md rounded-md overflow-hidden mx-auto  "
-  x-data=`{ selectedRole: ''}`
+  x-data=`{ selectedrole: ''}`
 >
   <!-- <div class="bg-gray-100 py-2 px-4">
     <h2 class="text-xl font-semibold text-gray-800">Convocatorias</h2>
@@ -78,7 +78,7 @@ const getPublicConvocation = [
   <div x-data="{ flags: ['BR/shiny/64.png', 'MX/shiny/64.png', 'VE/shiny/64.png'] }">
     <ul class="divide-y divide-gray-200">
       <template x-for=`(convocatoria, index) in ${JSON.stringify(getPublicConvocation)}` :key="convocatoria.id">
-        <li class="flex flex-wrap justify-around items-center py-2 px-3" x-if="selectedRole === '' || selectedRole === convocatoria.role">
+        <li class="flex flex-wrap justify-around items-center py-2 px-3" x-if="selectedrole === '' || selectedrole === convocatoria.role">
           <img
             class="w-12 h-12 rounded-full object-cover mr-4"
             :src="`https://flagsapi.com/${flags[index]}`"
@@ -144,6 +144,8 @@ const getPublicConvocation = [
   </div>
 </div>
 </div>
+
+
 
 <!-- <ul
   class="divide-y divide-gray-100 bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl"

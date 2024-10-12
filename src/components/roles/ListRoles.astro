@@ -119,7 +119,7 @@ const roles = ["estudiante", "administrador", "Docente"];
             </template>
         </template>
 
-        <li class="text-gray-600 p-4" x-show="usuarios.length === 0">No hay procesos disponibles.</li>
+        <li class="text-gray-600 p-4" x-show=`${JSON.stringify(usuarios)}.length === 0`>No hay procesos disponibles.</li>
     </ul>
 </div>
 

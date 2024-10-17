@@ -1,66 +1,44 @@
 ---
-import Input from "@components/shared/forms/Input.astro";
-import Select from "@components/shared/forms/Select.astro"
+import Login from "@components/login/login.astro";
 import LoginLayout from "@layouts/LoginLayout.astro";
-const AppColorMain = import.meta.env.APP_COLOR_MAIN;
-const AppColorButton = import.meta.env.APP_COLOR_BUTTON;
----
+import axios from "axios";
+const endpointData = `${import.meta.env.PUBLIC_API_URL}auth/login`;
+const endpointTenant = `${import.meta.env.PUBLIC_API_URL}tenant`;
+if(Astro.request.method === "POST"){
+    try {
+        const data = await Astro.request.formData();
+        const tenant = data.get("tenant")
+        const email = data.get("email")
+        const password = data.get("password")
+        const getData = await axios({
+            method: 'post',
+            url: `${endpointData}`,
+            data: {
+                tenant: tenant,
+                email: email,
+                password: password,
+            }
+        });
+        const getTenant = await axios.get(`${endpointTenant}/${tenant}`)
+        .then((response) => response.data)
+        .catch((error)=> console.log(error));
 
-<LoginLayout title="Iniciar sesión">
-	<div class="mt-10">
-		<form class="space-y-6" method="POST">
-			<Select
-			attributes={{
-				required: "",
-				label: "Listado de universidades",
-				options: [
-					{
-						id: 1,
-						name: "hola"
-					}
-				]
-			}}
-			
-			/>
-			<Input
-				attributes={{
-					autocomplete: "username",
-					id: "username",
-					label: "Usuario",
-					maxlength: 25,
-					minlength: 5,
-					name: "username",
-					required: "",
-					type: "text",
-				}}
-			/>
-			<Input
-				attributes={{
-					autocomplete: "current-password",
-					id: "password",
-					label: "Contraseña",
-					minlength: "7",
-					maxlength: "30",
-					name: "password",
-					required: "",
-					type: "password",
-				}}
-			/>
-			<div class="flex items-center justify-end">
-				<div class="text-sm leading-6">
-					<a
-						class=`font-semibold text-[${AppColorMain}] hover:text-[${AppColorButton}]`
-						href={`password/recovery`}>¿Olvidaste tu contraseña?</a
-					>
-				</div>
-			</div>
-			<div>
-				<button
-					class=`flex w-full justify-center rounded-md bg-[${AppColorMain}] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[${AppColorButton}] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[${AppColorMain}]`
-					type="submit"
-					>Entrar
-				</button>
-			</div>
-		</form>
-	</div>
+        Astro.cookies.set("access_token", `${getData.data.access_token}`);
+        Astro.cookies.set("refresh_token", `${getData.data.refresh_token}`);
+        Astro.cookies.set("image", `${getTenant.image}`)
+        Astro.cookies.set("primary_color", `${getTenant.colors.primary}`)
+        Astro.cookies.set("secondary_color", `${getTenant.colors.secondary}`)
+        Astro.cookies.set("menu", `${JSON.stringify(getData.data.menu)}`);
+        Astro.cookies.set("prueba", `bg-[${getTenant.colors.secondary}]`);
+        return Astro.redirect("/home")
+    } catch (error) {
+        if(error instanceof Error){
+            console.log(error.message);
+        }
+    }
+}
+---
+<LoginLayout>
+    <Login />
 </LoginLayout>
+<script>

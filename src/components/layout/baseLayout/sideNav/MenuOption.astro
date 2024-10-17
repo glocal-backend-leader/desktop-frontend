@@ -1,32 +1,15 @@
 ---
-
-import { Icon } from "astro-icon/components";
-
-
-const { option: { name, path } } = Astro.props;
-
-const currentPath = path;
-const currentName=name
-
-
+const {option: {name, path},} = Astro.props;
+const secondaryColor = Astro.cookies.get("secondary_color").value;
 ---
-<li x-data="{ isSelected: false }">
-  <a
-    href={currentPath} 
-    @click="isSelected = !isSelected" 
-    :class="{'bg-white text-[#99CC33] border-r-4 border-emerald-600': isSelected,'text-amber-50 hover:bg-[#012929]': !isSelected}"
-    class="grid grid-cols-12 w-full items-center gap-x-3 p-1 text-left text-sm font-medium leading-6 rounded-md my-1 transition relative">
-      <div class="col-start-1 col-span-2">
-      </div>
-      <div class="absolute top-0 bottom-0 left-50 w-0.5 h-full bg-white"></div>
-      <div class="relative col-start-1 col-span-2 flex justify-center items-center">
-        <div class="absolute w-2 h-2 bg-white rounded-full"></div>
-      </div>
-      <div class="col-start-3 col-span-10">{name}</div>
-      <div 
-        x-show="isSelected"
-        class="absolute right-1 top-0 bottom-0 w-20 bg-white transform translate-x-full"
-      ></div>
-  </a>
+<li>
+    <a
+        style=`background-color: ${secondaryColor};`
+        class="grid grid-cols-12 w-full items-center gap-x-3 p-1 text-left text-sm font-medium leading-6 text-amber-50 hover:bg-emerald-950 rounded-md my-1"
+        href={path}>
+        <div class="col-start-1 col-span-2">
+        </div>
+        <div class="col-start-3 col-span-10">{name}</div>
+    </a>
 </li>
 

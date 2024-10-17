@@ -1,15 +1,20 @@
 ---
 import Logo from "@components/layout/baseLayout/sideNav/Logo.astro";
 import Menu from "@components/layout/baseLayout/sideNav/Menu.astro";
-
-import { MENU } from "@constants/shared";
+const menu = Astro.cookies.get("menu").value;
+const buildMenu = JSON.parse(menu);
+const primaryColor = Astro.cookies.get("primary_color").value;
+const MENU = [
+    {
+        name: buildMenu.name,
+        options: buildMenu.options
+    }
+]
 ---
 
 <div class="hidden lg:fixed lg:inset-y-0 lg:z-20 lg:flex lg:w-72 lg:flex-col">
-    <div
-        class="flex grow flex-col gap-y-5 overflow-y-auto bg-[#003333] px-6 py-4"
-    >
-        <Logo />
-        <Menu menu={MENU} />
+    <div id="1" style=`background-color: ${primaryColor};` class=`flex grow flex-col gap-y-5 overflow-y-auto px-6 py-4`>
+        <Logo/>
+        <Menu menu={MENU}/>
     </div>
 </div>

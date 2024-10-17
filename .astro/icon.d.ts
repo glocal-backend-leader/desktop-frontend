@@ -30,6 +30,8 @@ declare module 'virtual:astro-icon' {
 		| "shared/report"
 		| "shared/search"
 		| "shared/setting"
+		| "shared/setting/tenant01"
+		| "shared/setting/tenant02"
 		| "shared/template"
 		| "shared/type"
 		| "shared/upload"

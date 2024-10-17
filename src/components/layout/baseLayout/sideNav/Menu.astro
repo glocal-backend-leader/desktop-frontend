@@ -78,6 +78,7 @@ const primaryColor = Astro.cookies.get("primary_color").value;
       </a>
     </li>
    <li class="mt-auto">
+    <!-- 
     {
       menu.map(
         (applicative) =>
@@ -102,5 +103,14 @@ const primaryColor = Astro.cookies.get("primary_color").value;
           ),
       )
     }
+      -->
+        {
+            menu.map((applicative) => (
+                <MenuApplicative
+                    name={applicative.name}
+                    options={applicative.options}
+                />
+            ))
+        }
   </ul>
 </nav>

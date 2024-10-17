@@ -1,4 +1,4 @@
 ---
-import { Icon } from "astro-icon/components"
-const endpoint="hola"
+const image = Astro.cookies.get("image").value;
 ---
+<img class="h-20 w-auto mx-auto bg-transparent" src=`${image}`/>

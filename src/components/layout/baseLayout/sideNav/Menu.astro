@@ -1,8 +1,8 @@
 ---
 import { Icon } from "astro-icon/components";
 import MenuApplicative from "./MenuApplicative.astro";
-const { pathname } = Astro.url;
 const { menu } = Astro.props;
+const primaryColor = Astro.cookies.get("primary_color").value;
 ---
 
 <nav class="flex flex-1 flex-col" x-data={`{activeMenuItem: ''}`}>
@@ -10,7 +10,7 @@ const { menu } = Astro.props;
     <li>
       <a
         href="/inbox"
-        class="flex items-center p-2 rounded-md text-sm font-semibold leading-6 text-amber-50 hover:bg-emerald-950 group"
+        class=`flex items-center p-2 rounded-md text-sm font-semibold leading-6 text-amber-50 hover:bg-[${primaryColor}] group`
       >
         <Icon name="inbox/inbox" />
         <span class="ms-3">Bandeja de entrada</span>

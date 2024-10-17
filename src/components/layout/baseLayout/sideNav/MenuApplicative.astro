@@ -1,18 +1,19 @@
 ---
 import { Icon } from "astro-icon/components";
-
 import MenuOption from "./MenuOption.astro";
-
 const {name, options} = Astro.props;
+const SecondaryColor = Astro.cookies.get("prueba").value;
+console.log(SecondaryColor)
 ---
 
-<li x-data="{expanded: false}">
+<li x-data=`{expanded: false}`>
     <div>
         <button
             class="flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-amber-50 hover:bg-emerald-950"
             transition:persist
             type="button"
-            :class="expanded ? 'bg-emerald-950' : ''"
+            id="para"
+            :class=`expanded ? '' : '${SecondaryColor}'`
             @click="expanded = ! expanded"
         >
             <Icon name="shared/chevron-down" size={20} x-show="!expanded" />

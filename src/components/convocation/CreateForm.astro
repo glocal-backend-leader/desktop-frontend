@@ -1,0 +1,446 @@
+---
+import Input from "@components/shared/forms/Input.astro";
+import TextArea from "@components/shared/forms/TextArea.astro";
+import Toggle from "@components/shared/forms/Toggle.astro";
+---
+<div x-data="{
+    modalFormIsOpen: false,
+    step: 1,
+    form: { name: '', description: '', status: true },
+    field: { type: '', label: '', placeholder: '', validations: [], required: false, maxLength: '', min: '', max: '', options: [], fileSize: '', multiple: false, minDate: '', maxDate: '', url: '', columns: '', rows: '' },
+    fields: [],
+}">
+    <!-- Botón para abrir el modal de creación de formulario -->
+    <button
+        @click="modalFormIsOpen = true"
+        type="button"
+        class="cursor-pointer whitespace-nowrap rounded-md bg-green-800 px-4 py-2 text-center text-sm font-medium text-white hover:bg-green-900"
+    >
+        Crear Formulario
+    </button>
+
+    <!-- Modal para creación de formulario -->
+    <div
+        x-show="modalFormIsOpen"
+        x-cloak
+        x-transition.opacity.duration.200ms
+        x-trap.inert.noscroll="modalFormIsOpen"
+        @keydown.esc.window="modalFormIsOpen = false"
+        @click.self="modalFormIsOpen = false"
+        class="fixed inset-0 z-30 flex items-center justify-center bg-black/20 p-4 pb-8 backdrop-blur-md lg:p-8"
+        role="dialog"
+        aria-modal="true"
+    >
+        <div
+            class="flex flex-col w-full max-w-4xl gap-4 overflow-hidden rounded-2xl border border-neutral-300 bg-white text-neutral-600"
+        >
+            <!-- Header del Modal -->
+            <div class="flex items-center justify-between border-b border-neutral-300 bg-neutral-50/60 p-4">
+                <h3 class="font-semibold tracking-wide text-neutral-900">
+                    Crear Nuevo Formulario
+                </h3>
+                <button @click="modalFormIsOpen = false" aria-label="close modal">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="1.4" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Step 1: Información del Formulario -->
+            <div x-show="step === 1" class="px-8 py-4">
+                <h2 class="text-xl font-bold mb-4">Información del Formulario</h2>
+                <p class="text-sm text-gray-600 mb-4">Fase actual: <span x-text="phaseName"></span></p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <Input
+                        attributes={{
+                            id: "name",
+                            label: "Nombre del formulario",
+                            name: "name",
+                            type: "text",
+                            "x-model": "form.name"
+                        }}
+                    />
+                    <TextArea
+                        attributes={{
+                            id: "description",
+                            label: "Descripción",
+                            name: "description",
+                            "x-model": "form.description"
+                        }}
+                    />
+                    <Toggle
+                        attributes={{
+                            id: "status",
+                            label: "Estado",
+                            "x-model": "form.status",
+                            checked: true
+                        }}
+                    />
+                </div>
+            </div>
+
+            <!-- Step 2: Creación de Campos -->
+            <div x-show="step === 2" class="px-8 py-4">
+                <h2 class="text-xl font-bold mb-4">Crear Campo</h2>
+
+                <!-- Propiedades Generales -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="type" class="block text-sm font-medium text-gray-700">Tipo</label>
+                        <select id="type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" x-model="field.type">
+                            <option value="">Seleccionar</option>
+                            <option value="text">Texto</option>
+                            <option value="paragraph">Párrafo</option>
+                            <option value="radio">Selección (tipo radio)</option>
+                            <option value="select">Selección desplegable</option>
+                            <option value="number">Numérico</option>
+                            <option value="date">Fecha</option>
+                            <option value="file">Archivo adjunto</option>
+                            <option value="photo">Foto</option>
+                            <option value="url">URL</option>
+                            <option value="table">Tabla</option>
+                        </select>
+                    </div>
+
+                    <Input
+                        attributes={{
+                            id: "label",
+                            label: "Etiqueta",
+                            name: "label",
+                            type: "text",
+                            "x-model": "field.label"
+                        }}
+                    />
+
+                    <Input
+                        attributes={{
+                            id: "helpText",
+                            label: "Texto de Ayuda",
+                            name: "helpText",
+                            type: "text",
+                            "x-model": "field.helpText"
+                        }}
+                    />
+
+                    <Toggle
+                        attributes={{
+                            id: "required",
+                            label: "Requerido",
+                            "x-model": "field.required"
+                        }}
+                    />
+
+                    <Input
+                        attributes={{
+                            id: "width",
+                            label: "Ancho (1, 2, 3 o 4)",
+                            name: "width",
+                            type: "number",
+                            "x-model": "field.width"
+                        }}
+                    />
+
+                    <Toggle
+                        attributes={{
+                            id: "showInTable",
+                            label: "Mostrar en la tabla principal",
+                            "x-model": "field.showInTable"
+                        }}
+                    />
+                </div>
+
+                <!-- Propiedades Específicas (cambian dependiendo del tipo seleccionado) -->
+
+                <!-- Texto -->
+                <template x-if="field.type === 'text'">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Input
+                            attributes={{
+                                id: "placeholder",
+                                label: "Placeholder",
+                                name: "placeholder",
+                                type: "text",
+                                "x-model": "field.placeholder"
+                            }}
+                        />
+                        <Input
+                            attributes={{
+                                id: "maxLength",
+                                label: "Longitud Máxima",
+                                name: "maxLength",
+                                type: "number",
+                                "x-model": "field.maxLength"
+                            }}
+                        />
+                    </div>
+                </template>
+
+                <!-- Párrafo -->
+                <template x-if="field.type === 'paragraph'">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Input
+                            attributes={{
+                                id: "maxLength",
+                                label: "Longitud Máxima",
+                                name: "maxLength",
+                                type: "number",
+                                "x-model": "field.maxLength"
+                            }}
+                        />
+                    </div>
+                </template>
+
+                <!-- Selección tipo Radio -->
+                <template x-if="field.type === 'radio'">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Opciones</label>
+                            <template x-for="(option, index) in field.options" :key="index">
+                                <div class="flex items-center mb-2">
+                                    <input type="text" x-model="field.options[index]" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" placeholder="Opción" />
+                                    <button type="button" @click="field.options.splice(index, 1)" class="ml-2 text-red-600">Eliminar</button>
+                                </div>
+                            </template>
+                            <button type="button" @click="field.options.push('')" class="mt-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded hover:bg-green-700">Agregar opción</button>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Selección Desplegable -->
+                <template x-if="field.type === 'select'">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Opciones</label>
+                            <template x-for="(option, index) in field.options" :key="index">
+                                <div class="flex items-center mb-2">
+                                    <input type="text" x-model="field.options[index]" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" placeholder="Opción" />
+                                    <button type="button" @click="field.options.splice(index, 1)" class="ml-2 text-red-600">Eliminar</button>
+                                </div>
+                            </template>
+                            <button type="button" @click="field.options.push('')" class="mt-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded hover:bg-green-700">Agregar opción</button>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Numérico -->
+                <template x-if="field.type === 'number'">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Input
+                            attributes={{
+                                id: "min",
+                                label: "Valor Mínimo",
+                                name: "min",
+                                type: "number",
+                                "x-model": "field.min"
+                            }}
+                        />
+                        <Input
+                            attributes={{
+                                id: "max",
+                                label: "Valor Máximo",
+                                name: "max",
+                                type: "number",
+                                "x-model": "field.max"
+                            }}
+                        />
+                    </div>
+                    <button
+    @click="fields.push({...field}); field = { type: '', label: '', placeholder: '', validations: [], required: false, maxLength: '', min: '', max: '', options: [], fileSize: '', multiple: false, minDate: '', maxDate: '', url: '', columns: '', rows: '' }"
+    class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded hover:bg-green-700"
+>
+    Agregar Campo
+</button>
+
+                </template>
+
+                <!-- Fecha -->
+                <template x-if="field.type === 'date'">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Input
+                            attributes={{
+                                id: "minDate",
+                                label: "Fecha Mínima",
+                                name: "minDate",
+                                type: "date",
+                                "x-model": "field.minDate"
+                            }}
+                        />
+                        <Input
+                            attributes={{
+                                id: "maxDate",
+                                label: "Fecha Máxima",
+                                name: "maxDate",
+                                type: "date",
+                                "x-model": "field.maxDate"
+                            }}
+                        />
+                    </div>
+                </template>
+
+                <!-- Archivo Adjunto / Foto -->
+                <template x-if="field.type === 'file' || field.type === 'photo'">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Input
+                            attributes={{
+                                id: "fileSize",
+                                label: "Tamaño Máximo",
+                                name: "fileSize",
+                                type: "number",
+                                "x-model": "field.fileSize"
+                            }}
+                        />
+                        <Toggle
+                            attributes={{
+                                id: "multiple",
+                                label: "Permitir múltiples archivos",
+                                "x-model": "field.multiple"
+                            }}
+                        />
+                    </div>
+                </template>
+
+                <!-- URL -->
+                <template x-if="field.type === 'url'">
+                    <Input
+                        attributes={{
+                            id: "url",
+                            label: "URL",
+                            name: "url",
+                            type: "text",
+                            "x-model": "field.url"
+                        }}
+                    />
+                </template>
+
+                <!-- Tabla -->
+                <template x-if="field.type === 'table'">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Input
+                            attributes={{
+                                id: "columns",
+                                label: "Número de Columnas",
+                                name: "columns",
+                                type: "number",
+                                "x-model": "field.columns"
+                            }}
+                        />
+                        <Input
+                            attributes={{
+                                id: "rows",
+                                label: "Número de Filas",
+                                name: "rows",
+                                type: "number",
+                                "x-model": "field.rows"
+                            }}
+                        />
+                    </div>
+                </template>
+            </div>
+
+            <!-- Step 3: Previsualizacion de Campos -->
+            <div x-show="step === 3" class="px-8 py-4">
+                <template x-for="(field, index) in fields" :key="index">
+                    <div class="mb-4">
+                        <label :for="field.label" class="block text-sm font-medium text-gray-700" x-text="field.label"></label>
+                
+                        <!-- Texto -->
+                        <template x-if="field.type === 'text'">
+                            <input type="text" :placeholder="field.placeholder" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" />
+                        </template>
+                
+                        <!-- Párrafo -->
+                        <template x-if="field.type === 'paragraph'">
+                            <textarea :placeholder="field.placeholder" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"></textarea>
+                        </template>
+                
+                        <!-- Radio -->
+                        <template x-if="field.type === 'radio'">
+                            <div class="space-y-2">
+                                <template x-for="option in field.options" :key="option">
+                                    <label class="flex items-center">
+                                        <input type="radio" :name="field.label" class="mr-2" />
+                                        <span x-text="option"></span>
+                                    </label>
+                                </template>
+                            </div>
+                        </template>
+                
+                        <!-- Selección desplegable -->
+                        <template x-if="field.type === 'select'">
+                            <select class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                                <template x-for="option in field.options" :key="option">
+                                    <option x-text="option"></option>
+                                </template>
+                            </select>
+                        </template>
+                
+                        <!-- Numérico -->
+                        <template x-if="field.type === 'number'">
+                            <input type="number" :min="field.min" :max="field.max" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" />
+                        </template>
+                
+                        <!-- Fecha -->
+                        <template x-if="field.type === 'date'">
+                            <input type="date" :min="field.minDate" :max="field.maxDate" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" />
+                        </template>
+                
+                        <!-- Archivo adjunto / Foto -->
+                        <template x-if="field.type === 'file' || field.type === 'photo'">
+                            <input type="file" :multiple="field.multiple" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" />
+                        </template>
+                
+                        <!-- URL -->
+                        <template x-if="field.type === 'url'">
+                            <input type="url" :placeholder="field.placeholder" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" />
+                        </template>
+                
+                        <!-- Tabla -->
+                        <template x-if="field.type === 'table'">
+                            <table class="min-w-full table-auto border border-gray-300">
+                                <thead>
+                                    <tr>
+                                        <th class="border px-2 py-1">Columnas</th>
+                                        <th class="border px-2 py-1">Filas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border px-2 py-1" x-text="field.columns"></td>
+                                        <td class="border px-2 py-1" x-text="field.rows"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </template>
+                    </div>
+                </template>
+                
+            </div>
+
+            <!-- Footer con los botones de navegación -->
+            <div class="flex justify-between px-8 py-4 border-t border-neutral-300">
+                <button
+                    x-show="step > 1"
+                    @click="step--"
+                    class="px-4 py-2 text-sm font-medium text-white bg-gray-600 rounded hover:bg-gray-700"
+                >
+                    Anterior
+                </button>
+                <button
+                    x-show="step < 3"
+                    @click="step++"
+                    class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded hover:bg-green-700"
+                >
+                    Siguiente
+                </button>
+                <button
+                    x-show="step === 3"
+                    @click="modalFormIsOpen = false"
+                    class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded hover:bg-green-700"
+                >
+                    Crear Formulario
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -16,7 +16,7 @@ export const MENU = [
         name: process.name,
         options: [
             {
-                name:"hola",
+                name:"Entrante",
                 path:"/convocation"
             }
         ]

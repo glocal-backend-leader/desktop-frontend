@@ -6,10 +6,10 @@ import alpinejs from "@astrojs/alpinejs";
 import node from "@astrojs/node";
 import tailwind from "@astrojs/tailwind";
 
+import vercel from "@astrojs/vercel/serverless";
+
 export default defineConfig({
-  adapter: node({
-    mode: "standalone"
-  }),
+  adapter: vercel(),
   integrations: [alpinejs(), icon(), tailwind()],
   output: 'server',
   prefetch: {

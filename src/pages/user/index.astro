@@ -1,0 +1,49 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { Icon } from "astro-icon/components";
+
+
+const user={
+    name:"Edwin Fernando",
+    city:"Bogota",
+    birthDate:'5/2/2011',
+    email: 'edwin.fernando@umanizales.edu.co',
+    phone: '+57 300 123 4567',
+    imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+}
+
+---
+
+<BaseLayout>
+    <div class="bg-white shadow-md rounded-md overflow-hidden flex flex-col md:flex-row justify-start" x-data=`{ data: ${JSON.stringify(user)} }`>
+        <img
+            class="w-48 h-48 rounded-full object-cover p-4 mx-auto"
+            :src="data.imageUrl"
+            alt="User avatar"
+        />
+
+        <div class="flex-1 p-1 mx-auto">
+            <h3 class="text-lg font-semibold p-1" x-text="data.name"></h3>
+            <p class="p-1">
+                <span class="text-gray-600">Ciudad:</span> 
+                <span class="font-semibold" x-text="data.city"></span>
+            </p>
+            <p class="p-1">
+                <span class="text-gray-600">Fecha de Nacimiento:</span> 
+                <span class="font-semibold" x-text="data.birthDate"></span>
+            </p>
+            <p class="p-1">
+                <span class="text-gray-600">Correo:</span> 
+                <span class="font-semibold" x-text="data.email"></span>
+            </p>
+            <p class="p-1 mb-5">
+                <span class="text-gray-600">Teléfono:</span> 
+                <span class="font-semibold" x-text="data.phone"></span>
+            </p>
+        </div>
+
+        <button class="  text-gray-500 hover:text-gray-900 p-10" >
+            <Icon class="h-5 w-5 md:h-6 md:w-6" name="shared/pencil" />
+        </button>
+    </div>
+</BaseLayout>

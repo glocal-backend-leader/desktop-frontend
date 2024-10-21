@@ -5,6 +5,74 @@ import { Icon } from "astro-icon/components";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import ConvocationWithoutLogin from "@layouts/ConvocationWithoutLogin.astro";
 import ListLogoutConvocation from "@components/convocation/ListLogoutConvocation.astro";
+import axios from "axios";
+
+let phases = [];
+let forms = [];
+let users = [];
+let roles = [];
+let convocations = [];
+
+const getPhases = async () => {
+    try {
+        const response = await axios.get(
+            `${import.meta.env.PUBLIC_API_URL}phases`,
+        );
+        phases = response.data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const getForms = async () => {
+    try {
+        const response = await axios.get(
+            `${import.meta.env.PUBLIC_API_URL}form`,
+        );
+        forms = response.data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const getUsers = async () => {
+    try {
+        const response = await axios.get(
+            `${import.meta.env.PUBLIC_API_URL}user`,
+        );
+        users = response.data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const getRoles = async () => {
+    try {
+        const response = await axios.get(
+            `${import.meta.env.PUBLIC_API_URL}system/roles`,
+        );
+        roles = response.data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const getConvocations = async () => {
+    try {
+        const response = await axios.get(
+            `${import.meta.env.PUBLIC_API_URL}processes`,
+        );
+        convocations = response.data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+await getPhases();
+await getForms();
+await getUsers();
+await getRoles();
+await getConvocations();
 ---
 
 <div>
@@ -12,7 +80,10 @@ import ListLogoutConvocation from "@components/convocation/ListLogoutConvocation
         style="background-color: #305959;"
         class="text-white flex justify-between items-center py-4 px-8 h-24"
     >
-        <div x-data="{ showInput: false }" class="flex justify-between items-center w-2/5">
+        <div
+            x-data="{ showInput: false }"
+            class="flex justify-between items-center w-2/5"
+        >
             <button
                 @click="showInput = !showInput"
                 class="bg-emerald-700 p-2 rounded-full"
@@ -27,7 +98,7 @@ import ListLogoutConvocation from "@components/convocation/ListLogoutConvocation
                 @click.outside="showInput = false"
             />
         </div>
-        <div>
+        <!-- <div>
             <a
                 href="/login"
                 style="background-color: #305959;"
@@ -35,7 +106,7 @@ import ListLogoutConvocation from "@components/convocation/ListLogoutConvocation
             >
                 Iniciar sesion
             </a>
-        </div>
+        </div> -->
     </nav>
     <div class="relative w-full items-center">
         <img
@@ -65,8 +136,105 @@ import ListLogoutConvocation from "@components/convocation/ListLogoutConvocation
     <div class="flex items-center justify-center m-10">
         <img src="/images/logos/universidades.png" alt="" class="h-3/4 w-4/5" />
     </div>
-    <div class="h-auto" style="background-color: #11426E;" id="calls">
+    <!-- <div class="h-auto" style="background-color: #11426E;" id="calls">
         <p class="text-white text-2xl font-bold p-5">Convocatorias</p>
         <ListLogoutConvocation />
+    </div> -->
+
+    <div>
+        <h1 class="text-2xl">Convocations</h1>
+        {
+            convocations.length > 0 ? (
+                <ul>
+                    {convocations.map((convocation) => (
+                        <li>
+                            <p>
+                                <strong>Nombre:</strong> {convocation.name}
+                            </p>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p>No se encontraron convocations.</p>
+            )
+        }
+    </div>
+    <hr>
+    <div>
+        <h1 class="text-2xl">Fases</h1>
+        {
+            phases.length > 0 ? (
+                <ul>
+                    {phases.map((phase) => (
+                        <li>
+                            <p>
+                                <strong>Nombre:</strong> {phase.name}
+                            </p>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p>No se encontraron fases.</p>
+            )
+        }
     </div>
 </div>
+<hr />
+<div>
+    <h1 class="text-2xl">Forms</h1>
+    {
+        forms.length > 0 ? (
+            <ul>
+                {forms.map((form) => (
+                    <li>
+                        <p>
+                            <strong>Nombre:</strong> {form.name}
+                        </p>
+                    </li>
+                ))}
+            </ul>
+        ) : (
+            <p>No se encontraron forms.</p>
+        )
+    }
+</div>
+<hr />
+<div>
+    <h1 class="text-2xl">Users</h1>
+    {
+        users.length > 0 ? (
+            <ul>
+                {users.map((user) => (
+                    <li>
+                        <p>
+                            <strong>Nombre:</strong> {user.name}
+                        </p>
+                    </li>
+                ))}
+            </ul>
+        ) : (
+            <p>No se encontraron users.</p>
+        )
+    }
+</div>
+<hr />
+<div>
+    <h1 class="text-2xl">Roles</h1>
+    {
+        roles.length > 0 ? (
+            <ul>
+                {roles.map((role) => (
+                    <li>
+                        <p>
+                            <strong>Nombre:</strong> {role.name}
+                        </p>
+                    </li>
+                ))}
+            </ul>
+        ) : (
+            <p>No se encontraron roles.</p>
+        )
+    }
+</div>
+<hr />
+

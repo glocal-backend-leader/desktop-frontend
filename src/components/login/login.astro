@@ -5,7 +5,7 @@ import Icon from "node_modules/astro-icon/components/Icon.astro";
 const endpoint = `${import.meta.env.PUBLIC_API_URL}tenant/`;
 let tenants = [];
 await axios
-    .get(`${import.meta.env.LOCAL_API_URL}tenant`)
+    .get(`${import.meta.env.PUBLIC_API_URL}tenant`)
     .then((response) => (tenants = response.data))
     .catch((error) => console.log(console.log(error)));
 ---

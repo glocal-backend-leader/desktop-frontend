@@ -2,10 +2,11 @@
 import Input from "@components/shared/forms/Input.astro";
 import axios from "axios";
 import Icon from "node_modules/astro-icon/components/Icon.astro";
-const endpoint = `${import.meta.env.PUBLIC_API_URL}tenant/`;
+// const endpoint = `${import.meta.env.PUBLIC_API_URL}tenant/`;
+const endpoint = `${import.meta.env.LOCAL_API_URL}tenant/`;
 let tenants = [];
 await axios
-    .get(`${import.meta.env.PUBLIC_API_URL}tenant`)
+    .get(`${import.meta.env.LOCAL_API_URL}tenant`)
     .then((response) => (tenants = response.data))
     .catch((error) => console.log(console.log(error)));
 ---
@@ -55,9 +56,10 @@ await axios
                                 const tenantData = await fetch(endpoint + selectedTenantId)
                                     .then((response)=> response = response.json())
                                     .catch((error) => console.log(error))
+                                    console.log(tenantData);
                                 tenantImage = tenantData.image;
-                                primaryColor = tenantData.colors.primary;
-                                secondaryColor = tenantData.colors.secondary;
+                                primaryColor = tenantData.primary_color;
+                                secondaryColor = tenantData.secondary_color;
                                 "
 
                             >

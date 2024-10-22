@@ -2,8 +2,7 @@
 import Input from "@components/shared/forms/Input.astro";
 import axios from "axios";
 import Icon from "node_modules/astro-icon/components/Icon.astro";
-// const endpoint = `${import.meta.env.PUBLIC_API_URL}tenant/`;
-const endpoint = `${import.meta.env.LOCAL_API_URL}tenant/`;
+const endpoint = `${import.meta.env.PUBLIC_API_URL}tenant/`;
 let tenants = [];
 await axios
     .get(`${import.meta.env.LOCAL_API_URL}tenant`)
